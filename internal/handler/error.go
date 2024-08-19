@@ -3,8 +3,8 @@ package handler
 import (
 	"fmt"
 
-	"github.com/nzin/golang-skeleton/pkg/util"
-	"github.com/nzin/golang-skeleton/swagger_gen/models"
+	"github.com/nzin/lexneo4j/internal/util"
+	"github.com/nzin/lexneo4j/swagger_gen/models"
 )
 
 // Error is the handler error
