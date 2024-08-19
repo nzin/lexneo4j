@@ -7,9 +7,8 @@ To do so, the REST API server can receive a CYPHER command (on the /api/v1/cyphe
 
 ## How to run it
 ```
-make build
 docker-compose up -d
-make run &
+make
 curl http://localhost:18000/api/v1/cypher -H 'Content-type: application/json' -d '{"cmd":"MATCH (m:Movie) RETURN m.title,m.released"}' | jq .
 ```
 
