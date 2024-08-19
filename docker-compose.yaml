@@ -1,0 +1,25 @@
+version: "3"
+ 
+services:
+  neo4j:
+    image: neo4j:4.4.3
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4JLABS_PLUGINS=["apoc"]
+#      - NEO4J_dbms_memory_pagecache_size=1G
+    volumes:
+      - neo4jdata:/data
+    ports:
+      - 7474:7474
+      - 7687:7687
+ 
+  neo4j-provisioning:
+    image: neo4j:4.4.3
+    volumes:
+      - ./neo4j/initMovieDb.cql:/initMovieDb.cql
+      - ./neo4j/wait-for.sh:/wait-for.sh
+    entrypoint: []
+    command: /bin/sh -c '/wait-for.sh http://neo4j:7474 -- cypher-shell -a      neo4j://neo4j:7687 -u neo4j -p password -f /initMovieDb.cql'
+
+volumes:
+  neo4jdata:

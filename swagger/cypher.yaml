@@ -1,0 +1,36 @@
+post:
+  tags:
+    - app
+  summary: "Run a custom cypher command"
+  operationId: doCypher
+  parameters:
+    - in: body
+      name: body
+      description: readonly cypher command
+      required: true
+      schema:
+        type: object
+        properties:
+          cmd:
+            description: cypher command
+            type: string
+            minLength: 1
+  responses:
+    200:
+      description: cypher command result
+      schema:
+        type: object
+        properties:
+          result:
+            description: cypher command result
+            type: array
+            items:
+              type: object
+              properties:
+                line:
+                  type: string
+                  minLength: 1
+    default:
+      description: generic error response
+      schema:
+        $ref: "#/definitions/error"

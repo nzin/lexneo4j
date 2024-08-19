@@ -1,0 +1,76 @@
+---
+swagger: "2.0"
+info:
+  description: >
+    lexneo4j is a neo4j interface application
+    The base path for all the APIs is "/api/v1".
+  title: lexneo4j
+  version: 1.0.0
+tags:
+  - name: health
+    description: Check if lexneo4j is healthy
+x-tagGroups:
+  - name: lexneo4j Management
+    tags:
+      - app
+  - name: Health Check
+    tags:
+      - health
+consumes:
+- application/json
+produces:
+- application/json
+schemes:
+- http
+basePath: "/api/v1"
+paths:
+  /health:
+    $ref: ./health.yaml
+  /cypher:
+    $ref: ./cypher.yaml
+  /movies:
+    $ref: ./movies.yaml
+
+
+definitions:
+
+  # Health check
+  health:
+    type: object
+    properties:
+      status:
+        type: string
+
+  # cypher
+  cypher:
+    type: object
+    required:
+      - cmd
+    properties:
+      cmd:
+        description: cypher command
+        type: string
+        minLength: 1
+
+  movie:
+    type: object
+    required:
+      - title
+    properties:
+      title:
+        description: movie title
+        type: string
+        minLength: 1
+      released:
+        description: released year
+        type: integer
+
+  # Default Error
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        minLength: 1

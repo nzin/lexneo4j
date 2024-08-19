@@ -1,0 +1,19 @@
+get:
+  tags:
+    - app
+  summary: "App: List movies"
+  operationId: listMovies
+  responses:
+    200:
+      description: list all movies
+      schema:
+        type: object
+        properties:
+          movies:
+            type: array
+            items:
+              $ref: "#/definitions/movie"
+    default:
+      description: generic error response
+      schema:
+        $ref: "#/definitions/error"
