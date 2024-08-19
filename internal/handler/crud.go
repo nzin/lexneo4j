@@ -28,7 +28,7 @@ func NewCRUD() CRUD {
 	neo4jdriver, err := neo4j.NewDriver(config.Config.Neo4jURL, neo4j.BasicAuth(config.Config.Neo4jUsername, config.Config.Neo4jPassword, ""), func(config *neo4j.Config) {
 		config.MaxConnectionLifetime = 1 * time.Minute
 		config.MaxConnectionPoolSize = 10
-		config.ConnectionAcquisitionTimeout = time.Minute
+		config.ConnectionAcquisitionTimeout = 5 * time.Second
 		config.SocketKeepalive = true
 	})
 	if err != nil {
@@ -103,6 +103,13 @@ func (c *crud) DoCypher(params app.DoCypherParams) middleware.Responder {
 			ErrorMessage("cannot parse query: %v", err))
 	}
 
+	if len(query.Return) == 0 {
+		return app.NewDoCypherDefault(500).WithPayload(
+			ErrorMessage("The query is missing a proper RETURN statement"))
+	}
+
+	logrus.Infof("query: %s", query.ToString())
+
 	session := c.neo4jdriver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer session.Close()
 	res, err := session.ReadTransaction(func(tx neo4j.Transaction) (interface{}, error) {
@@ -135,14 +142,39 @@ func (c *crud) DoCypher(params app.DoCypherParams) middleware.Responder {
 	}
 
 	results := make([]*app.DoCypherOKBodyResultItems0, 0)
+
+	// fetch keys
+	keys := map[string]struct{}{}
+
+	for _, r := range res.([]map[string]interface{}) {
+		for k, _ := range r {
+			keys[k] = struct{}{}
+		}
+	}
+
+	s := ""
+	for k, _ := range keys {
+		if s != "" {
+			s += ","
+		}
+		s += k
+	}
+	results = append(results, &app.DoCypherOKBodyResultItems0{
+		Line: s,
+	})
+
+	// list values
 	for _, r := range res.([]map[string]interface{}) {
 		s := ""
-		for k, v := range r {
+		for k, _ := range keys {
 			if s != "" {
 				s += ","
 			}
-			s += fmt.Sprintf("%s:%v", k, v)
+			s += fmt.Sprintf("%v", r[k])
 		}
+		results = append(results, &app.DoCypherOKBodyResultItems0{
+			Line: s,
+		})
 	}
 
 	return app.NewDoCypherOK().WithPayload(

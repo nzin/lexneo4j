@@ -21,7 +21,8 @@ var Config = struct {
 	MiddlewareGzipEnabled bool `env:"LEXNEO4J_MIDDLEWARE_GZIP_ENABLED" envDefault:"true"`
 
 	// neo4j configuration
-	Neo4jURL      string `env:"NEO4J_URL" envDefault:"bolt://neo4j:7687/neo4j"`
+	//Neo4jURL      string `env:"NEO4J_URL" envDefault:"bolt://neo4j:7687/neo4j"`
+	Neo4jURL      string `env:"NEO4J_URL" envDefault:"neo4j://localhost:7687/neo4j"`
 	Neo4jUsername string `env:"NEO4J_USERNAME" envDefault:"neo4j"`
 	Neo4jPassword string `env:"NEO4J_PASSWORD" envDefault:"password"`
 }{}

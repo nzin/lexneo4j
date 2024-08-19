@@ -41,68 +41,68 @@ func (r *CypherVariableReturn) ToString() string {
 	}
 }
 
-// func (n *CypherNode) ToString(tenant string) string {
-// 	str := ""
-// 	if n.VariableName != nil {
-// 		str = *n.VariableName
-// 	}
-// 	if n.TypeName != nil {
-// 		str += ":" + *n.TypeName
-// 	}
-// 	props := make(map[string]string)
-// 	for k, v := range n.Props {
-// 		props[k] = v
-// 	}
-// 	props["tenant"] = tenant
+func (n *CypherNode) ToStringWithTenant(tenant string) string {
+	str := ""
+	if n.VariableName != nil {
+		str = *n.VariableName
+	}
+	if n.TypeName != nil {
+		str += ":" + *n.TypeName
+	}
+	props := make(map[string]string)
+	for k, v := range n.Props {
+		props[k] = v
+	}
+	props["tenant"] = tenant
 
-// 	str += "{"
-// 	firstProp := true
-// 	for k, v := range props {
-// 		if !firstProp {
-// 			str += ","
-// 		}
-// 		str += fmt.Sprintf("%s:'%s'", k, v)
-// 		firstProp = false
-// 	}
-// 	str += "}"
+	str += "{"
+	firstProp := true
+	for k, v := range props {
+		if !firstProp {
+			str += ","
+		}
+		str += fmt.Sprintf("%s:'%s'", k, v)
+		firstProp = false
+	}
+	str += "}"
 
-// 	return str
-// }
+	return str
+}
 
-// func (q *CypherQuery) ToString(tenant string) string {
-// 	str := "MATCH "
-// 	str += fmt.Sprintf("(%s)", q.MatchNode.ToString(tenant))
+func (q *CypherQuery) ToStringWithTenant(tenant string) string {
+	str := "MATCH "
+	str += fmt.Sprintf("(%s)", q.MatchNode.ToStringWithTenant(tenant))
 
-// 	if q.Relationship != nil {
-// 		if q.Relationship.Direction == REL_FROM {
-// 			str += "<-"
-// 		} else {
-// 			str += "-"
-// 		}
-// 		if q.Relationship.Props != nil {
-// 			str += fmt.Sprintf("[%s]", q.Relationship.Props.ToString(tenant))
-// 		}
-// 		if q.Relationship.Direction == REL_TO {
-// 			str += "->"
-// 		} else {
-// 			str += "-"
-// 		}
-// 		str += fmt.Sprintf("(%s)", q.Relationship.Target.ToString(tenant))
-// 	}
+	if q.Relationship != nil {
+		if q.Relationship.Direction == REL_FROM {
+			str += "<-"
+		} else {
+			str += "-"
+		}
+		if q.Relationship.Props != nil {
+			str += fmt.Sprintf("[%s]", q.Relationship.Props.ToStringWithTenant(tenant))
+		}
+		if q.Relationship.Direction == REL_TO {
+			str += "->"
+		} else {
+			str += "-"
+		}
+		str += fmt.Sprintf("(%s)", q.Relationship.Target.ToStringWithTenant(tenant))
+	}
 
-// 	if q.Return != nil {
-// 		str += " RETURN "
-// 		firstRet := true
-// 		for _, ret := range q.Return {
-// 			if !firstRet {
-// 				str += ","
-// 			}
-// 			str += ret.ToString()
-// 			firstRet = true
-// 		}
-// 	}
-// 	return str
-// }
+	if q.Return != nil {
+		str += " RETURN "
+		firstRet := true
+		for _, ret := range q.Return {
+			if !firstRet {
+				str += ","
+			}
+			str += ret.ToString()
+			firstRet = false
+		}
+	}
+	return str
+}
 
 func (n *CypherNode) ToString() string {
 	str := ""
@@ -160,7 +160,7 @@ func (q *CypherQuery) ToString() string {
 				str += ","
 			}
 			str += ret.ToString()
-			firstRet = true
+			firstRet = false
 		}
 	}
 	return str

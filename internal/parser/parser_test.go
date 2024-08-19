@@ -194,22 +194,22 @@ func TestParser(t *testing.T) {
 	})
 }
 
-// func TestCypherReturn(t *testing.T) {
+func TestCypherReturn(t *testing.T) {
 
-// 	t.Run("complete test 1", func(t *testing.T) {
-// 		s := "MATCH (n) RETURN n"
-// 		parser := NewParser(s)
-// 		query, err := parser.parseQuery()
-// 		assert.Nil(t, err)
-// 		str := query.ToString("TENANT")
-// 		assert.Equal(t, "MATCH (n{tenant:'TENANT'}) RETURN n", str)
-// 	})
-// 	t.Run("complete test 2", func(t *testing.T) {
-// 		s := "MATCH (n:Person{foo:'bar'})-[r]->(o:Person) RETURN n.foo"
-// 		parser := NewParser(s)
-// 		query, err := parser.parseQuery()
-// 		assert.Nil(t, err)
-// 		str := query.ToString("TENANT")
-// 		assert.Equal(t, "MATCH (n:Person{foo:'bar',tenant:'TENANT'})-[r{tenant:'TENANT'}]->(o:Person{tenant:'TENANT'}) RETURN n.foo", str)
-// 	})
-// }
+	t.Run("complete test 1", func(t *testing.T) {
+		s := "MATCH (n) RETURN n"
+		parser := NewParser(s)
+		query, err := parser.parseQuery()
+		assert.Nil(t, err)
+		str := query.ToStringWithTenant("TENANT")
+		assert.Equal(t, "MATCH (n{tenant:'TENANT'}) RETURN n", str)
+	})
+	t.Run("complete test 2", func(t *testing.T) {
+		s := "MATCH (n:Person{foo:'bar'})-[r]->(o:Person) RETURN n.foo"
+		parser := NewParser(s)
+		query, err := parser.parseQuery()
+		assert.Nil(t, err)
+		str := query.ToStringWithTenant("TENANT")
+		assert.Equal(t, "MATCH (n:Person{foo:'bar',tenant:'TENANT'})-[r{tenant:'TENANT'}]->(o:Person{tenant:'TENANT'}) RETURN n.foo", str)
+	})
+}
